@@ -1,5 +1,5 @@
 import sqlite3
-from tkinter import Toplevel, Label, Button, Entry, Tk
+from tkinter import Toplevel, Label, Entry, Tk
 from tkinter import ttk
 import tkinter as tk
 import tkinter.scrolledtext as scrolledtext
@@ -48,7 +48,7 @@ def readPage():
     text = scrolledtext.ScrolledText(page, **kwargs)
     text.insert(tk.END, page_text)
     text.pack()
-    Button(page, text='Edit', font=fonts[1],
+    ttk.Button(page, text='Edit',
            command=lambda: [writePage(date=selected_date, page=page_text,
                                       edit=True),
                             page.destroy()]).pack()
@@ -71,7 +71,7 @@ def writePage(date='', page='', edit=False):
     page_box = scrolledtext.ScrolledText(entry_page, **kwargs)
     page_box.grid(row=1, column=1)
     page_box.insert(tk.END, page)
-    submit = Button(entry_page, text='Submit',  font=fonts[1])
+    submit = ttk.Button(entry_page, text='Submit')
     submit.grid(row=2, column=1)
     submit.configure(command=lambda: [submitPage(submit_date.get(),
                                                  page_box.get('1.0', tk.END)),
@@ -116,10 +116,10 @@ scrollbar = ttk.Scrollbar(orient="vertical", command=tree.yview)
 scrollbar.pack(side='right', fill='y')
 tree.configure(yscrollcommand=scrollbar.set)
 tree.pack()
-Button(text='Read page', command=readPage).pack(fill='x')
-Button(text='Add new page', command=writePage).pack(fill='x')
-Button(text='Refresh', command=refreshDB).pack(fill='x')
-Button(text='Delete page', command=deletePage).pack(fill='x')
+ttk.Button(text='Read page', command=readPage).pack(fill='x')
+ttk.Button(text='Add new page', command=writePage).pack(fill='x')
+ttk.Button(text='Refresh', command=refreshDB).pack(fill='x')
+ttk.Button(text='Delete page', command=deletePage).pack(fill='x')
 tree.bind("<Return>", OnDoubleClick)
 tree.bind("<Double-1>", OnDoubleClick)
 
