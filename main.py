@@ -4,7 +4,7 @@ from tkinter import ttk
 import tkinter as tk
 import tkinter.scrolledtext as scrolledtext
 import tkinter.messagebox
-
+import sv_ttk
 
 fonts = (
     'TimesNewRoman',
@@ -128,4 +128,5 @@ if __name__ == '__main__':
         refreshDB()
     except:
         print('new database was detected/created')
+    sv_ttk.set_theme("dark")
     root.mainloop()
