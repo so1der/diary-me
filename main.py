@@ -62,8 +62,8 @@ def writePage(date='', page='', edit=False):
     if edit is True:
         entry_page.title(f'Edit Page {date}')
         old_date = date
-    Label(entry_page, text='Date: ',  font=fonts[0]).grid(row=0, column=0)
-    submit_date = Entry(entry_page, bd=5, font=fonts[0])
+    Label(entry_page, text='Date: ',  font=fonts[1]).grid(row=0, column=0)
+    submit_date = Entry(entry_page, bd=5, font=fonts[1])
     submit_date.grid(row=0, column=1)
     submit_date.insert(tk.END, date)
     Label(entry_page, text='Text:',  font=fonts[0]).grid(row=1, column=0)
@@ -107,21 +107,38 @@ sql.execute('''CREATE TABLE IF NOT EXISTS diary(
         page TEXT
     )''')
 
-root = Tk()
+
+root = tk.Tk()
 root.resizable(0, 0)
 root.title('Diary Me')
 
-tree = ttk.Treeview(show='tree', selectmode='browse', height=12)
-scrollbar = ttk.Scrollbar(orient="vertical", command=tree.yview)
-scrollbar.pack(side='right', fill='y')
+
+frame = ttk.Frame(root, padding="10 10 10 10")
+frame.grid(column=0, row=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+
+tree = ttk.Treeview(frame, show='tree', selectmode='browse', height=12)
+scrollbar = ttk.Scrollbar(frame, orient="vertical", command=tree.yview)
+scrollbar.grid(column=1, row=0, sticky=(tk.N, tk.S))
 tree.configure(yscrollcommand=scrollbar.set)
-tree.pack()
-ttk.Button(text='Read page', command=readPage).pack(fill='x')
-ttk.Button(text='Add new page', command=writePage).pack(fill='x')
-ttk.Button(text='Refresh', command=refreshDB).pack(fill='x')
-ttk.Button(text='Delete page', command=deletePage).pack(fill='x')
+tree.grid(column=0, row=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+
+button_frame = ttk.Frame(frame, padding="10 10 10 10")
+button_frame.grid(column=0, row=1, sticky=(tk.W, tk.E))
+
+ttk.Button(button_frame, text='Read page', command=readPage).grid(column=0, row=0, sticky=(tk.W, tk.E))
+ttk.Button(button_frame, text='Add new page', command=writePage).grid(column=1, row=0, sticky=(tk.W, tk.E))
+ttk.Button(button_frame, text='Refresh', command=refreshDB).grid(column=2, row=0, sticky=(tk.W, tk.E))
+ttk.Button(button_frame, text='Delete page', command=deletePage).grid(column=3, row=0, sticky=(tk.W, tk.E))
+
 tree.bind("<Return>", OnDoubleClick)
 tree.bind("<Double-1>", OnDoubleClick)
+
+root.columnconfigure(0, weight=1)
+root.rowconfigure(0, weight=1)
+frame.columnconfigure(0, weight=1)
+frame.rowconfigure(0, weight=1)
+
+
 
 if __name__ == '__main__':
     try:
