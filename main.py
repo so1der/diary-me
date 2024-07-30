@@ -33,25 +33,55 @@ def editPage(date, page, old_date):
     db.commit()
 
 
+def updateText(page, date_label, direction):
+    global current_date, text
+    dates = list(sql.execute('SELECT date FROM diary')) 
+    dates = [d[0] for d in dates]
+    current_index = dates.index(current_date)
+    
+    if direction == 'next' and current_index < len(dates) - 1:
+        current_index += 1
+    elif direction == 'prev' and current_index > 0:
+        current_index -= 1
+    
+    current_date = dates[current_index]
+    page_text = sql.execute('SELECT page FROM diary WHERE date = (?)', (current_date,))
+    page_text = list(page_text)[0][0]
+    page.title(current_date)
+    date_label.config(text=current_date)
+    text.delete('1.0', tk.END)
+    text.insert(tk.END, page_text)
+
+
 def readPage():
+    global text, current_date
+    
     page = Toplevel(root)
     page.focus()
     page.resizable(0, 0)
+    
     selection = tree.item(tree.selection())
     selected_date = selection['text']
+    current_date = selected_date
+    
     page.title(selected_date)
-    Label(page, text=selected_date, font=fonts[2]).pack()
-    page_text = sql.execute('SELECT page FROM diary WHERE date = (?)',
-                            (selected_date,))
+    date_label = tk.Label(page, text=selected_date, font=fonts[2])
+    date_label.pack()
+    
+    page_text = sql.execute('SELECT page FROM diary WHERE date = (?)', (selected_date,))
     page_text = list(page_text)[0][0]
+    
     kwargs = {'wrap': 'word', 'font': fonts[1], 'exportselection': 0}
     text = scrolledtext.ScrolledText(page, **kwargs)
     text.insert(tk.END, page_text)
     text.pack()
-    ttk.Button(page, text='Edit',
-           command=lambda: [writePage(date=selected_date, page=page_text,
-                                      edit=True),
-                            page.destroy()]).pack()
+    ttk.Button(page, text='<----', command=lambda: updateText(page, date_label, 'prev')).pack(side='left')
+    ttk.Button(page, text='---->', command=lambda: updateText(page, date_label, 'next')).pack(side='right')
+    ttk.Button(page, text='Edit', command=lambda: [writePage(date=selected_date, page=page_text, edit=True), page.destroy()]).pack()
+
+
+
+
 
 
 def writePage(date='', page='', edit=False):
@@ -147,3 +177,4 @@ if __name__ == '__main__':
         print('new database was detected/created')
     sv_ttk.set_theme("dark")
     root.mainloop()
+
