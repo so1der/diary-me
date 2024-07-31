@@ -77,7 +77,7 @@ def readPage():
     text.pack()
     ttk.Button(page, text='<----', command=lambda: updateText(page, date_label, 'prev')).pack(side='left')
     ttk.Button(page, text='---->', command=lambda: updateText(page, date_label, 'next')).pack(side='right')
-    ttk.Button(page, text='Edit', command=lambda: [writePage(date=selected_date, page=page_text, edit=True), page.destroy()]).pack()
+    ttk.Button(page, text='Edit', command=lambda: [writePage(date=current_date, page=text.get('1.0', 'end-1c'), edit=True), page.destroy()]).pack()
 
 
 
